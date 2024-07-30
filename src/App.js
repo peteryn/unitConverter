@@ -60,13 +60,13 @@ export default function App() {
 }
 
 function Box() {
-	const [activeMeasurement, setActiveMeasurement] = useState(MEASUREMENTS[0].name);
+	const [activeMeasurementName, setActiveMeasurementName] = useState(MEASUREMENTS[0].name);
 	const [leftUnit, setLeftUnit] = useState(MEASUREMENTS[0].units[0].unit);
 	const [rightUnit, setRightUnit] = useState(MEASUREMENTS[0].units[1].unit);
 	const [leftInput, setLeftInput] = useState("");
 	const [rightInput, setRightInput] = useState("");
 
-	const activeMeasurementObject = MEASUREMENTS.find((m) => m.name === activeMeasurement);
+	const activeMeasurementObject = MEASUREMENTS.find((m) => m.name === activeMeasurementName);
 	const activeMeasurementUnits = activeMeasurementObject.units;
 	const activeUnits = activeMeasurementObject.units;
 
@@ -115,7 +115,7 @@ function Box() {
 		<div className="container">
 			<UnitCategory
 				mesasurements={MEASUREMENTS}
-				setMeasurement={setActiveMeasurement}
+				setMeasurement={setActiveMeasurementName}
 			></UnitCategory>
 			<UnitArea
 				id="left"
@@ -124,7 +124,8 @@ function Box() {
 				setUnit={setLeftUnit}
 				currentData={leftInput}
 				updateInput={calculate}
-				currentMeasurement={activeMeasurement}
+				currentMeasurement={activeMeasurementObject}
+				setInputData={setLeftInput}
 			></UnitArea>
 			<h1>=</h1>
 			<UnitArea
@@ -134,7 +135,8 @@ function Box() {
 				setUnit={setRightUnit}
 				currentData={rightInput}
 				updateInput={calculate}
-				currentMeasurement={activeMeasurement}
+				currentMeasurement={activeMeasurementObject}
+				setInputData={setRightInput}
 			></UnitArea>
 		</div>
 	);
@@ -168,6 +170,7 @@ function UnitArea({
 	currentData,
 	updateInput,
 	currentMeasurement,
+	setInputData,
 }) {
 	const options = units.map((u) => {
 		return (
@@ -179,6 +182,23 @@ function UnitArea({
 
 	const handleChange = (event) => {
 		setUnit(event.target.value);
+		// get current value in
+		// get current unit
+		// get new unit
+		const newUnit = event.target.value;
+		// calculate new value
+		// get toStandard for current unit
+		const currentUnitObject = currentMeasurement.units.find((u) => u.unit === currentUnit);
+		const toStandard = currentUnitObject.toStandard;
+		// get toSpecific for new unit
+		const newUnitObject = currentMeasurement.units.find((u) => u.unit === newUnit);
+		const toSpecific = newUnitObject.toSpecific;
+		// convert currentData to standard unit
+		const standard = toStandard(currentData);
+		// convert standard to specific
+		const newSpecific = toSpecific(standard);
+		// set new value
+		setInputData(newSpecific);
 	};
 
 	return (

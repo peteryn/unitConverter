@@ -73,24 +73,25 @@ function Box() {
 	// pass the needed stuff instead of relying on closures
 	const calculate = (event) => {
 		const userInput = event.target.value;
-		if (userInput !== "-" && !Number.isNaN(userInput)) {
-			const numericalInput = Number(userInput);
+		if (userInput === "-" || Number.isNaN(userInput)) {
+			return;
+		}
 
-			const leftUnitObject = activeMeasurementUnits.find((unit) => unit.unit === leftUnit);
-			const rightUnitObject = activeMeasurementUnits.find((unit) => unit.unit === rightUnit);
+		const numericalInput = Number(userInput);
+		const leftUnitObject = activeMeasurementUnits.find((unit) => unit.unit === leftUnit);
+		const rightUnitObject = activeMeasurementUnits.find((unit) => unit.unit === rightUnit);
 
-			let standard;
-			if (event.target.id === "left") {
-				standard = leftUnitObject.toStandard(numericalInput);
-				const rightSpecific = rightUnitObject.toSpecific(standard);
-				setRightInput(rightSpecific);
-				setLeftInput(userInput);
-			} else {
-				standard = rightUnitObject.toStandard(numericalInput);
-				const leftSpecific = leftUnitObject.toSpecific(standard);
-				setLeftInput(leftSpecific);
-				setRightInput(userInput);
-			}
+		let standard;
+		if (event.target.id === "left") {
+			standard = leftUnitObject.toStandard(numericalInput);
+			const rightSpecific = rightUnitObject.toSpecific(standard);
+			setRightInput(rightSpecific);
+			setLeftInput(userInput);
+		} else {
+			standard = rightUnitObject.toStandard(numericalInput);
+			const leftSpecific = leftUnitObject.toSpecific(standard);
+			setLeftInput(leftSpecific);
+			setRightInput(userInput);
 		}
 	};
 

@@ -73,7 +73,23 @@ function Box() {
 	// pass the needed stuff instead of relying on closures
 	const calculate = (event) => {
 		const userInput = event.target.value;
-		if (userInput === "-" || Number.isNaN(userInput)) {
+		const targetId = event.target.id;
+		if (userInput === "") {
+			setLeftInput("");
+			setRightInput("");
+			return;
+		}
+
+		if (userInput === "-") {
+			if (targetId === "left") {
+				setLeftInput("-");
+			} else {
+				setRightInput("-");
+			}
+			return;
+		}
+
+		if (Number.isNaN(Number(userInput))) {
 			return;
 		}
 
@@ -82,7 +98,7 @@ function Box() {
 		const rightUnitObject = activeMeasurementUnits.find((unit) => unit.unit === rightUnit);
 
 		let standard;
-		if (event.target.id === "left") {
+		if (targetId === "left") {
 			standard = leftUnitObject.toStandard(numericalInput);
 			const rightSpecific = rightUnitObject.toSpecific(standard);
 			setRightInput(rightSpecific);

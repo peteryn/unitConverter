@@ -39,8 +39,8 @@ const MEASUREMENTS = [
 			},
 			{
 				unit: "Kilometers",
-				toStandard: (dist) => myRound(dist / 1000),
-				toSpecific: (dist) => myRound(dist * 1000),
+				toStandard: (dist) => myRound(dist * 1000),
+				toSpecific: (dist) => myRound(dist / 1000),
 			},
 			{
 				unit: "Miles",
@@ -116,6 +116,10 @@ function Box() {
 			<UnitCategory
 				mesasurements={MEASUREMENTS}
 				setMeasurement={setActiveMeasurementName}
+				setLeftUnit={setLeftUnit}
+				setRightUnit={setRightUnit}
+				setLeftInput={setLeftInput}
+				setRightInput={setRightInput}
 			></UnitCategory>
 			<UnitArea
 				id="left"
@@ -142,7 +146,14 @@ function Box() {
 	);
 }
 
-function UnitCategory({ mesasurements, setMeasurement }) {
+function UnitCategory({
+	mesasurements,
+	setMeasurement,
+	setLeftUnit,
+	setRightUnit,
+	setLeftInput,
+	setRightInput,
+}) {
 	const options = mesasurements.map((m) => {
 		return (
 			<option key={m.name} value={m.name}>
@@ -152,7 +163,13 @@ function UnitCategory({ mesasurements, setMeasurement }) {
 	});
 
 	const handleChange = (event) => {
-		setMeasurement(event.target.value);
+		const newMeasurementName = event.target.value;
+		const newMeasurementObject = mesasurements.find((m) => m.name === newMeasurementName);
+		setLeftUnit(newMeasurementObject.units[0].unit);
+		setRightUnit(newMeasurementObject.units[1].unit);
+		setLeftInput("");
+		setRightInput("");
+		setMeasurement(newMeasurementName);
 	};
 
 	return (
